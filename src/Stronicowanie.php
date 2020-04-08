@@ -94,6 +94,28 @@ class Stronicowanie
     }
 
     /**
+     * Generuje informacje o tym ktore rekordy z kolei zostaly wyswietlone i na ile, w formacie :
+     * "Wyświetlono 1 - 5 z 254 rekordów"
+     *
+     * @param string $select Zapytanie SELECT
+     * @param string $strona Na ktorej stronie jestesmy
+     * @return string
+     */
+    public function pobierzInfoOLiczbieRekordow(string $select, string $strona): string
+    {
+        $rekordow = $this->db->policzRekordy($select, $this->parametryZapytania);
+        if($rekordow == 0) {
+            return "Wyświetlono 0 rekordów";
+        }
+
+        $pocz = $strona*$this->naStronie+1;
+        $kon = min($pocz+$this->naStronie-1,$rekordow);
+        $info = "Wyświetlono ".$pocz." - ".$kon." z ".$rekordow." rekordów";
+
+        return $info;
+    }
+
+    /**
      * Przetwarza parametry wyszukiwania.
      * Wyrzuca zbędne elementy i tworzy gotowy do wstawienia w linku zestaw parametrów.
      *
